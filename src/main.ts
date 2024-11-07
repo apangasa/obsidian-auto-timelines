@@ -98,7 +98,7 @@ export default class AprilsAutomaticTimelinesPlugin extends Plugin {
 			) => {
 				return (
 					compareAbstractDates(a, b) ||
-					compareAbstractDates(aE, bE) ||
+					-1 * compareAbstractDates(aE, bE) ||
 					titleA.localeCompare(titleB)
 				);
 			}
