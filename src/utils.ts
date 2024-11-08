@@ -220,7 +220,7 @@ export function createNumberDateTokenConfiguration(
 	defaultValue: Partial<DateTokenConfiguration<DateTokenType.number>> = {}
 ): DateTokenConfiguration<DateTokenType.number> {
 	return {
-		minLeght: 2,
+		minLength: 2,
 		name: "",
 		type: DateTokenType.number,
 		displayWhenZero: true,

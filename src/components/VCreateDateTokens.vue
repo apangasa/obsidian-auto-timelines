@@ -19,7 +19,7 @@ function handleAddAtEnd() {
 		...props.modelValue,
 		{
 			type: DateTokenType.number,
-			minLeght: 2,
+			minLength: 2,
 			name: "",
 		} as DateTokenConfiguration,
 	]);

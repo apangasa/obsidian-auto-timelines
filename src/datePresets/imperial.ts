@@ -14,7 +14,7 @@ export const imperialDatePreset: DateFormatCreationFunction = () => ({
 		dateTokenConfiguration: [
 			createNumberDateTokenConfiguration({
 				name: "year",
-				minLeght: 4,
+				minLength: 4,
 			}),
 			createNumberDateTokenConfiguration({ name: "month" }),
 			createNumberDateTokenConfiguration({ name: "day" }),

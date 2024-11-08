@@ -18,7 +18,7 @@ export const verboseDayDatePreset: DateFormatCreationFunction = ({ t }) => ({
 		dateTokenConfiguration: [
 			createNumberDateTokenConfiguration({
 				name: "year",
-				minLeght: 4,
+				minLength: 4,
 			}),
 			createStringDateTokenConfiguration({
 				name: "month",
@@ -40,7 +40,7 @@ export const verboseDayDatePreset: DateFormatCreationFunction = ({ t }) => ({
 			}),
 			createNumberDateTokenConfiguration({
 				name: "day",
-				minLeght: 1,
+				minLength: 1,
 				formatting: [
 					{
 						conditionsAreExclusive: true,

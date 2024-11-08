@@ -57,10 +57,10 @@ describe.concurrent("Abstract Date Formatting", () => {
 
 		expect(formatDateToken(2, configuration)).toBe("02");
 
-		configuration.minLeght = 10;
+		configuration.minLength = 10;
 		expect(formatDateToken(2, configuration)).toBe("0000000002");
 
-		configuration.minLeght = -10;
+		configuration.minLength = -10;
 		expect(formatDateToken(-2, configuration)).toBe("-2");
 	});
 

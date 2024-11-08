@@ -55,7 +55,7 @@ function handleResetToDefault(): void {
 			return accumulator;
 		}, {} as Partial<AutoTimelineSettings>),
 		dateTokenConfiguration: [
-			createNumberDateTokenConfiguration({ name: "year", minLeght: 4 }),
+			createNumberDateTokenConfiguration({ name: "year", minLength: 4 }),
 			createNumberDateTokenConfiguration({ name: "month" }),
 			createNumberDateTokenConfiguration({ name: "day" }),
 		],

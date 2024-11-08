@@ -39,7 +39,7 @@ function handleUpdateType($event: DateTokenType) {
 		emit("update:modelValue", {
 			...props.modelValue,
 			type: $event,
-			minLeght: 0,
+			minLength: 0,
 			displayWhenZero: true,
 			hideSign: false,
 		});
@@ -91,11 +91,11 @@ function handleDictionaryUpdateAtIndex(
 			>
 				<VInput
 					:input-id="`configure-single-date-token-min-length-edit-${modelValue.name}`"
-					:model-value="modelValue.minLeght"
+					:model-value="modelValue.minLength"
 					@update:model-value="
 						emit('update:modelValue', {
 							...modelValue,
-							minLeght: $event,
+							minLength: $event,
 						})
 					"
 					type="number"

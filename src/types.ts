@@ -135,7 +135,7 @@ type NumberSpecific = Merge<
 		/**
 		 * The minimum ammount of digits when displaying the date
 		 */
-		minLeght: number;
+		minLength: number;
 		displayWhenZero: boolean;
 		hideSign: boolean;
 	}

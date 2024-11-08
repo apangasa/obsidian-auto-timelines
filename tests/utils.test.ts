@@ -247,7 +247,7 @@ describe.concurrent("Utils", () => {
 
 	test("[createNumberDateTokenConfiguration] - ok", () => {
 		expect(createNumberDateTokenConfiguration()).toStrictEqual({
-			minLeght: 2,
+			minLength: 2,
 			name: "",
 			displayWhenZero: true,
 			formatting: [],
@@ -260,7 +260,7 @@ describe.concurrent("Utils", () => {
 				name: "sample",
 			})
 		).toStrictEqual({
-			minLeght: 2,
+			minLength: 2,
 			name: "sample",
 			type: DateTokenType.number,
 			displayWhenZero: true,
@@ -271,10 +271,10 @@ describe.concurrent("Utils", () => {
 		expect(
 			createNumberDateTokenConfiguration({
 				name: "sample",
-				minLeght: 234,
+				minLength: 234,
 			})
 		).toStrictEqual({
-			minLeght: 234,
+			minLength: 234,
 			name: "sample",
 			type: DateTokenType.number,
 			displayWhenZero: true,

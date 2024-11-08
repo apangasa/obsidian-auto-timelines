@@ -128,18 +128,18 @@ export function applyConditionBasedFormatting(
  *
  * @param datePart - fragment of an abstract date.
  * @param param1 - A numerical date token configuration to apply.
- * @param param1.minLeght - the minimal length of a numerical date input.
+ * @param param1.minLength - the minimal length of a numerical date input.
  * @param param1.hideSign - if `true` the date part will be passed to `Math.abs` before anu further formatting.
  * @returns the formated token.
  */
 function formatNumberDateToken(
 	datePart: number,
-	{ minLeght, hideSign }: DateTokenConfiguration<DateTokenType.number>
+	{ minLength, hideSign }: DateTokenConfiguration<DateTokenType.number>
 ): string {
 	let stringifiedToken = Math.abs(datePart).toString();
 
-	if (minLeght < 0) minLeght = 0;
-	while (stringifiedToken.length < minLeght)
+	if (minLength < 0) minLength = 0;
+	while (stringifiedToken.length < minLength)
 		stringifiedToken = "0" + stringifiedToken;
 
 	if (!hideSign && datePart < 0) stringifiedToken = `-${stringifiedToken}`;

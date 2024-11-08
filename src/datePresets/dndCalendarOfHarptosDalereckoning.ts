@@ -18,7 +18,7 @@ export const dndCalendarOfHarptosDalereckoningDatePreset: DateFormatCreationFunc
 			dateTokenConfiguration: [
 				createNumberDateTokenConfiguration({
 					name: "year",
-					minLeght: 4,
+					minLength: 4,
 				}),
 				createStringDateTokenConfiguration({
 					name: "month",

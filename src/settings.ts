@@ -44,7 +44,7 @@ export const SETTINGS_DEFAULT = {
 	titleFontSize: -1,
 	// complex
 	dateTokenConfiguration: [
-		createNumberDateTokenConfiguration({ name: "year", minLeght: 4 }),
+		createNumberDateTokenConfiguration({ name: "year", minLength: 4 }),
 		createNumberDateTokenConfiguration({ name: "month" }),
 		createNumberDateTokenConfiguration({ name: "day" }),
 	] as DateTokenConfiguration[],
