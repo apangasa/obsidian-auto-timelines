@@ -10,9 +10,9 @@ export const malanachanCalendarDatePreset: DateFormatCreationFunction = ({ t }) 
 	name: "malanachan-calendar",
 	icon: "calendar",
 	settings: {
-		dateDisplayFormat: "{day} {week}, {cycle} {year}",
+		dateDisplayFormat: "{day} {week} {cycle} {year}",
 		dateParserGroupPriority: "year,cycle,week,day",
-		dateParserRegex: "(?<year>-?[0-9]+)[/-](?<cycle>[1-3])[/-](?<week>[1-9]|1[0-3])[/-](?<day>[1-8])",
+		dateParserRegex: "(?<year>-?[0-9]+)(?:[/-](?<cycle>[1-3]))?(?:[/-](?<week>[1-9]|1[0-3]))?(?:[/-](?<day>[1-8]))?",
 		applyAdditonalConditionFormatting: true,
 		dateTokenConfiguration: [
 			createNumberDateTokenConfiguration({
@@ -22,7 +22,7 @@ export const malanachanCalendarDatePreset: DateFormatCreationFunction = ({ t }) 
 			createStringDateTokenConfiguration({
 				name: "cycle",
 				dictionary: [
-					"invalid 0 index",
+					"",
 					t("cycles.empriclus"),
 					t("cycles.apiclus"),
 					t("cycles.finiclus"),
@@ -31,26 +31,33 @@ export const malanachanCalendarDatePreset: DateFormatCreationFunction = ({ t }) 
 			createStringDateTokenConfiguration({
 				name: "week",
 				dictionary: [
-					"invalid 0 index",
-					t("weeks.eribrus"),
-					t("weeks.valebrus"),
-					t("weeks.andrebrus"),
-					t("weeks.sigurbrus"),
-					t("weeks.marbrus"),
-					t("weeks.susabris"),
-					t("weeks.melubris"),
-					t("weeks.jabrus"),
-					t("weeks.vinzebrus"),
-					t("weeks.leobrus"),
-					t("weeks.cecibris"),
-					t("weeks.talebris"),
-					t("weeks.volcebrus"),
+					"",
+					t("weeks.eribrus") + ",",
+					t("weeks.valebrus") + ",",
+					t("weeks.andrebrus") + ",",
+					t("weeks.sigurbrus") + ",",
+					t("weeks.marbrus") + ",",
+					t("weeks.susabris") + ",",
+					t("weeks.melubris") + ",",
+					t("weeks.jabrus") + ",",
+					t("weeks.vinzebrus") + ",",
+					t("weeks.leobrus") + ",",
+					t("weeks.cecibris") + ",",
+					t("weeks.talebris") + ",",
+					t("weeks.volcebrus") + ","
 				],
 			}),
 			createNumberDateTokenConfiguration({
 				name: "day",
 				minLength: 1,
 				formatting: [
+					{
+						conditionsAreExclusive: true,
+						evaluations: [
+							{ condition: Condition.Equal, value: 0 },
+						],
+						format: "",
+					},
 					{
 						conditionsAreExclusive: true,
 						evaluations: [
@@ -81,6 +88,13 @@ export const malanachanCalendarDatePreset: DateFormatCreationFunction = ({ t }) 
 					},
 				],
 			}),
+			// createNumberDateTokenConfiguration({
+			// 	name: "circa",
+			// 	dictionary: [
+			// 		"",
+			// 		"c. "
+			// 	],
+			// })
 		],
 	},
 });
