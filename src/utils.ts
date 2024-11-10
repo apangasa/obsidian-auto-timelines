@@ -285,14 +285,16 @@ export function parseAbstractDate(
 	metadataString: string,
 	reg: RegExp | string
 ): AbstractDate | undefined {
-	const matches = metadataString.match(reg);
-
+	const dateParserRegex = typeof reg === "string" ? new RegExp(reg) : reg;
+	const matches = dateParserRegex.exec(metadataString);
+	
 	if (!matches || !matches.groups) return undefined;
 
 	const { groups } = matches;
 
 	const output = groupsToCheck.reduce((accumulator, groupName) => {
-		const value = Number(groups[groupName]);
+		// console.log(groups[groupName]);
+		const value = !groups[groupName] ? 0 : Number(groups[groupName]);
 
 		// In the case of a faulty regex given by the user in the settings
 		if (!isNaN(value)) accumulator.push(value);
