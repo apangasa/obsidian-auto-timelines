@@ -65,7 +65,7 @@ export function createCardFromBuiltContext(
 
 	const dateElement = createElementShort(
 		titleWrap,
-		"h4",
+		"h6",
 		"aat-card-start-date",
 		getDateText(cardContent, settings).trim(),
 	);
@@ -147,5 +147,5 @@ export function getDateText(
 	const formatedStart = formatAbstractDate(startDate, settings);
 	if (!isDefined(endDate)) return formatedStart;
 
-	return `From ${formatedStart} to ${formatAbstractDate(endDate, settings)}`;
+	return `${formatedStart} to ${formatAbstractDate(endDate, settings)}`;
 }
