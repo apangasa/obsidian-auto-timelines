@@ -12,7 +12,7 @@ export const malanachanCalendarDatePreset: DateFormatCreationFunction = ({ t }) 
 	settings: {
 		dateDisplayFormat: "{day} {week} {cycle} {year}",
 		dateParserGroupPriority: "year,cycle,week,day",
-		dateParserRegex: "(?<year>-?[0-9]+)(?:[/-](?<cycle>[1-3]))?(?:[/-](?<week>[1-9]|1[0-3]))?(?:[/-](?<day>[1-8]))?",
+		dateParserRegex: "(?<year>-?[0-9]+)(?:[/-](?<cycle>[1-3]))?(?:[/-](?<week>1[0-3]|[1-9]))?(?:[/-](?<day>[1-8]))?",
 		applyAdditonalConditionFormatting: true,
 		dateTokenConfiguration: [
 			createNumberDateTokenConfiguration({
