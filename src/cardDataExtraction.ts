@@ -71,7 +71,7 @@ export function getBodyFromContextOrDocument(
 
 	const rawTextArray = rawFileText.split("\n");
 	rawTextArray.shift();
-	const processedArray = rawTextArray.slice(rawTextArray.indexOf("---") + 1);
+	const processedArray = rawTextArray.slice(rawTextArray.indexOf("---") + 1).filter(line => !line.trim().startsWith(">"));;
 	const finalString = processedArray.join("\n").trim();
 
 	return finalString;
