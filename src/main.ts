@@ -60,7 +60,7 @@ export default class AprilsAutomaticTimelinesPlugin extends Plugin {
 		element.empty();
 		const runtimeTime = measureTime("Run time");
 		const { app } = this;
-		const { tagsToFind, settingsOverride } =
+		const { condition, tagsToFind, notTags, settingsOverride } =
 			parseMarkdownBlockSource(source);
 		const finalSettings = { ...this.settings, ...settingsOverride };
 		const creationContext = setupTimelineCreation(
@@ -73,7 +73,7 @@ export default class AprilsAutomaticTimelinesPlugin extends Plugin {
 		const events: CompleteCardContext[] = [];
 
 		for (const context of creationContext) {
-			const baseData = await getDataFromNoteMetadata(context, tagsToFind);
+			const baseData = await getDataFromNoteMetadata(context, condition, tagsToFind, notTags);
 
 			if (isDefined(baseData)) events.push(baseData);
 			if (

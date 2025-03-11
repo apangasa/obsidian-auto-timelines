@@ -9,13 +9,15 @@ import {
 } from "./utils";
 
 /**
- * Fetches the tags to find and timeline specific settings override.
+ * Fetches the timelines to find and timeline specific settings override and any tag restrictions.
  *
  * @param source - The markdown code block source, a.k.a. the content inside the code block.
  * @returns Partial settings to override the global ones.
  */
 export function parseMarkdownBlockSource(source: string | string[]): {
+	readonly condition: string,
 	readonly tagsToFind: string[];
+	readonly notTags: string[];
 	readonly settingsOverride: Pick<
 		Partial<AutoTimelineSettings>,
 		OverridableSettingKey
@@ -26,14 +28,25 @@ export function parseMarkdownBlockSource(source: string | string[]): {
 		: source.split("\n");
 
 	if (!source.length)
-		return { tagsToFind: [] as string[], settingsOverride: {} } as const;
-	const tagsToFind = sourceEntries[0]
+		return { condition: "0", tagsToFind: [], notTags: [], settingsOverride: {} } as const;
+
+	const condition = sourceEntries.shift();
+	const [tagsPart, notTagsPart] = condition.split(/\s+NOT\s+/i);
+
+	const tagsToFind = tagsPart
 		.split(SETTINGS_DEFAULT.markdownBlockTagsToFindSeparator)
 		.map((e) => e.trim());
 
-	sourceEntries.shift();
+	let notTags: string[] = [];
+
+	if (notTagsPart) {
+		notTags = notTagsPart.split(",").map((tag) => tag.trim());
+	}
+
 	return {
+		condition,
 		tagsToFind,
+		notTags,
 		settingsOverride: sourceEntries.reduce((accumulator, element) => {
 			return {
 				...accumulator,
@@ -42,6 +55,7 @@ export function parseMarkdownBlockSource(source: string | string[]): {
 		}, {} as Pick<Partial<AutoTimelineSettings>, OverridableSettingKey>),
 	} as const;
 }
+
 
 export type OverridableSettingKey = (typeof acceptedSettingsOverride)[number];
 export const acceptedSettingsOverride = [

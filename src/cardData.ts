@@ -8,16 +8,21 @@ import {
 	getTagsFromMetadataOrTagObject,
 } from "./cardDataExtraction";
 
+import { Parser } from "expr-eval";
+
+
 /**
  * Provides additional context for the creation cards in the DOM.
  *
  * @param context - Timeline generic context.
- * @param tagsToFind - The tags to find in a note to match the current timeline.
+ * @param tagsToFind - The timelines to find in a note to match the current timeline.
  * @returns the context or underfined if it could not build it.
  */
 export async function getDataFromNoteMetadata(
 	context: MarkdownCodeBlockTimelineProcessingContext,
-	tagsToFind: string[]
+	condition: string,
+	tagsToFind: string[],
+	notTags: string[]
 ) {
 	const { cachedMetadata, settings } = context;
 	const { frontmatter: metaData, tags } = cachedMetadata;
@@ -31,7 +36,7 @@ export async function getDataFromNoteMetadata(
 		tags
 	);
 
-	if (!extractedTagsAreValid(timelineTags, tagsToFind)) return undefined;
+	if (!extractedTagsAreValid(timelineTags, condition)) return undefined;
 
 	return {
 		cardData: await extractCardData(context),
@@ -40,27 +45,90 @@ export async function getDataFromNoteMetadata(
 }
 
 /**
- * Checks if the extracted tags match at least one of the tags to find.
+ * Checks if the extracted tags match at least one of the tags to find,
+ * and ensures none of the noteTags are an ordered subarray of any notTags.
  *
  * @param noteTags - The extracted tags from the note.
  * @param tagsToFind - The tags to find for this timeline.
+ * @param notTags - The tags that should not be included.
  * @returns `true` if valid.
  */
+// export function extractedTagsAreValid(
+// 	noteTags: string[],
+// 	tagsToFind: string[],
+// 	notTags: string[]
+// ): boolean {
+// 	// Split to account for Obsidian nested tags
+// 	// https://help.obsidian.md/Editing+and+formatting/Tags#Nested+tags
+// 	const noteTagCollection = noteTags.map((e) => e.split("/"));
+// 	const notTagCollection = notTags.map((e) => e.split("/"));
+// 	const tagsToFindCollection = tagsToFind.map((e) => e.split("/"));
+
+// 	// Check if any noteTag is an ordered subarray of any notTag
+// 	if (noteTagCollection.some((fileTag) => 
+// 		notTagCollection.some((notTag) => isOrderedSubArray(fileTag, notTag))
+// 	)) {
+// 		return false;
+// 	}
+
+// 	// Check if any noteTag matches at least one of the tags to find
+// 	return tagsToFindCollection.some((timelineTag) => 
+// 		noteTagCollection.some((fileTag) => isOrderedSubArray(fileTag, timelineTag))
+// 	);
+// }
+
 export function extractedTagsAreValid(
 	noteTags: string[],
-	tagsToFind: string[]
+	condition: string
 ): boolean {
-	// Split to accoun for obsidian nested tags
-	// https://help.obsidian.md/Editing+and+formatting/Tags#Nested+tags
-	const noteTagCollection = noteTags.map((e) => e.split("/"));
+	const expression = convertToExprEvalSyntax(condition);
+	console.log(expression);
+	return evaluateExpression(expression, noteTags);
+}
 
-	return tagsToFind.some((tag) => {
-		const timelineTag = tag.split("/");
 
-		return noteTagCollection.some((fileTag) =>
-			isOrderedSubArray(fileTag, timelineTag)
-		);
-	});
+export function convertToExprEvalSyntax(input: string): string {
+	// mainly we need to encode tags such that / is replaced with _
+    return input
+        .replace(/\bAND\b/g, "and")
+        .replace(/\bOR\b/g, "or")
+        .replace(/\bNOT\s*\(([^)]+)\)/g, (_, group) => {
+            const terms = group.split(",").map(term => term.trim().replace(/\//g, "_"));
+            return `not (${terms.join(" or ")})`;
+        })
+        .replace(/\b[a-zA-Z0-9_/]+\b/g, match => match.replace(/\//g, "_"));
+}
+
+export function evaluateExpression(expression: string, noteTags: string[]): boolean {
+    const parser = new Parser();
+    const parsedExpr = parser.parse(expression);
+
+	const encodedTags = noteTags.map(tag => tag.replace(/\//g, "_"));
+    const expandedTags = expandTags(encodedTags);
+
+    const allVariables = parsedExpr.variables();
+    const context: Record<string, number | boolean> = {};
+    allVariables.forEach(variable => context[variable] = false);
+    expandedTags.forEach(tag => context[tag] = true);
+
+	console.log("Expression being evaluated:", expression);
+    console.log("All detected variables:", allVariables);
+    console.log("Context before evaluation:", context);
+
+    return parsedExpr.evaluate(context as any);
+}
+
+export function expandTags(noteTags: string[]): string[] {
+    const expandedTags = new Set<string>();
+
+    noteTags.forEach(tag => {
+        const parts = tag.split("_");
+        for (let i = 1; i <= parts.length; i++) {
+            expandedTags.add(parts.slice(0, i).join("_"));
+        }
+    });
+
+    return Array.from(expandedTags);
 }
 
 /**
@@ -78,6 +146,7 @@ export async function extractCardData(
 	const fileTitle =
 		c.frontmatter?.[settings.metadataKeyEventTitleOverride] ||
 		file.basename;
+
 
 	rawFileContent = rawFileContent || (await file.vault.cachedRead(file));
 	return {
