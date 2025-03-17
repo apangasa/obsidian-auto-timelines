@@ -65,11 +65,12 @@ export function getBodyFromContextOrDocument(
 		cachedMetadata: { frontmatter: metadata },
 		settings: { metadataKeyEventBodyOverride },
 	} = context;
+
 	const overrideBody = metadata?.[metadataKeyEventBodyOverride] ?? null;
 
 	if (!rawFileText.length || overrideBody) return overrideBody;
 
-	const rawTextArray = rawFileText.split("\n");
+	const rawTextArray = rawFileText.split(/\r?\n/);
 	rawTextArray.shift();
 	const processedArray = rawTextArray.slice(rawTextArray.indexOf("---") + 1).filter(line => !line.trim().startsWith(">"));;
 	const finalString = processedArray.join("\n").trim();

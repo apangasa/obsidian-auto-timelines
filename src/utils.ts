@@ -114,7 +114,7 @@ export const inLerp = (a: number, b: number, v: number) => (v - a) / (b - a);
  * @returns the handler that will close the timer.
  */
 export const measureTime = (str: string) => {
-	const value = `[April's automatic timelines] - ${str}`;
+	const value = `[Arnav's automatic timelines] - ${str}`;
 	console.time(value);
 
 	return () => {

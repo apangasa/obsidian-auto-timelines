@@ -60,7 +60,7 @@ export default class AprilsAutomaticTimelinesPlugin extends Plugin {
 		element.empty();
 		const runtimeTime = measureTime("Run time");
 		const { app } = this;
-		const { condition, tagsToFind, notTags, settingsOverride } =
+		const { condition, settingsOverride } =
 			parseMarkdownBlockSource(source);
 		const finalSettings = { ...this.settings, ...settingsOverride };
 		const creationContext = setupTimelineCreation(
@@ -73,7 +73,7 @@ export default class AprilsAutomaticTimelinesPlugin extends Plugin {
 		const events: CompleteCardContext[] = [];
 
 		for (const context of creationContext) {
-			const baseData = await getDataFromNoteMetadata(context, condition, tagsToFind, notTags);
+			const baseData = await getDataFromNoteMetadata(context, condition);
 
 			if (isDefined(baseData)) events.push(baseData);
 			if (
@@ -81,11 +81,13 @@ export default class AprilsAutomaticTimelinesPlugin extends Plugin {
 				!finalSettings.lookForCalendariumSpanEvents
 			)
 				continue;
+			console.log(`Processing file: ${context.file.path}`);
 			const body =
 				baseData?.cardData.body ||
 				(await context.file.vault.cachedRead(context.file));
+			console.log(body);
 			const inlineEvents = (
-				await getInlineEventData(body, context, tagsToFind)
+				await getInlineEventData(body, context, condition)
 			).filter(isDefined);
 
 			if (!inlineEvents.length) continue;

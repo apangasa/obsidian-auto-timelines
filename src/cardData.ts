@@ -21,8 +21,6 @@ import { Parser } from "expr-eval";
 export async function getDataFromNoteMetadata(
 	context: MarkdownCodeBlockTimelineProcessingContext,
 	condition: string,
-	tagsToFind: string[],
-	notTags: string[]
 ) {
 	const { cachedMetadata, settings } = context;
 	const { frontmatter: metaData, tags } = cachedMetadata;
@@ -82,7 +80,6 @@ export function extractedTagsAreValid(
 	condition: string
 ): boolean {
 	const expression = convertToExprEvalSyntax(condition);
-	console.log(expression);
 	return evaluateExpression(expression, noteTags);
 }
 
@@ -111,9 +108,9 @@ export function evaluateExpression(expression: string, noteTags: string[]): bool
     allVariables.forEach(variable => context[variable] = false);
     expandedTags.forEach(tag => context[tag] = true);
 
-	console.log("Expression being evaluated:", expression);
-    console.log("All detected variables:", allVariables);
-    console.log("Context before evaluation:", context);
+	// console.log("Expression being evaluated:", expression);
+    // console.log("All detected variables:", allVariables);
+    // console.log("Context before evaluation:", context);
 
     return parsedExpr.evaluate(context as any);
 }

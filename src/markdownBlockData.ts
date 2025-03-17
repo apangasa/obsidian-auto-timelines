@@ -16,8 +16,6 @@ import {
  */
 export function parseMarkdownBlockSource(source: string | string[]): {
 	readonly condition: string,
-	readonly tagsToFind: string[];
-	readonly notTags: string[];
 	readonly settingsOverride: Pick<
 		Partial<AutoTimelineSettings>,
 		OverridableSettingKey
@@ -28,25 +26,23 @@ export function parseMarkdownBlockSource(source: string | string[]): {
 		: source.split("\n");
 
 	if (!source.length)
-		return { condition: "0", tagsToFind: [], notTags: [], settingsOverride: {} } as const;
+		return { condition: "0", settingsOverride: {} } as const;
 
 	const condition = sourceEntries.shift();
-	const [tagsPart, notTagsPart] = condition.split(/\s+NOT\s+/i);
+	// const [tagsPart, notTagsPart] = condition.split(/\s+NOT\s+/i);
 
-	const tagsToFind = tagsPart
-		.split(SETTINGS_DEFAULT.markdownBlockTagsToFindSeparator)
-		.map((e) => e.trim());
+	// const tagsToFind = tagsPart
+	// 	.split(SETTINGS_DEFAULT.markdownBlockTagsToFindSeparator)
+	// 	.map((e) => e.trim());
 
-	let notTags: string[] = [];
+	// let notTags: string[] = [];
 
-	if (notTagsPart) {
-		notTags = notTagsPart.split(",").map((tag) => tag.trim());
-	}
+	// if (notTagsPart) {
+	// 	notTags = notTagsPart.split(",").map((tag) => tag.trim());
+	// }
 
 	return {
 		condition,
-		tagsToFind,
-		notTags,
 		settingsOverride: sourceEntries.reduce((accumulator, element) => {
 			return {
 				...accumulator,

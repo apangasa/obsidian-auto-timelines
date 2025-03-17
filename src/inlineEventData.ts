@@ -26,16 +26,16 @@ import type {
 export async function getInlineEventData(
 	body: string | undefined | null,
 	context: MarkdownCodeBlockTimelineProcessingContext,
-	tagsToFind: string[]
+	condition: string
 ): Promise<CompleteCardContext[]> {
 	const { settings } = context;
 	const promiseArray: Promise<CompleteCardContext[]>[] = [];
 
 	if (settings.lookForInlineEventsInNotes)
-		promiseArray.push(getDataFromNoteBody(body, context, tagsToFind));
+		promiseArray.push(getDataFromNoteBody(body, context, condition));
 	if (settings.lookForCalendariumSpanEvents)
 		promiseArray.push(
-			getDataFromFantasyCalendarSpanEvents(body, context, tagsToFind)
+			getDataFromFantasyCalendarSpanEvents(body, context, condition)
 		);
 
 	return (await Promise.all(promiseArray)).flat().filter(isDefined);
@@ -52,7 +52,7 @@ export async function getInlineEventData(
 export async function getDataFromNoteBody(
 	body: string | undefined | null,
 	context: MarkdownCodeBlockTimelineProcessingContext,
-	tagsToFind: string[]
+	condition: string
 ): Promise<CompleteCardContext[]> {
 	if (!body) return [];
 	const clonedContext =
@@ -87,7 +87,7 @@ export async function getDataFromNoteBody(
 			clonedContext.cachedMetadata.tags
 		);
 
-		if (!extractedTagsAreValid(noteTags, tagsToFind)) continue;
+		if (!extractedTagsAreValid(noteTags, condition)) continue;
 
 		const matchPositionInBody = body.indexOf(block);
 		output.push({
@@ -116,7 +116,7 @@ export async function getDataFromNoteBody(
 export async function getDataFromFantasyCalendarSpanEvents(
 	body: string | undefined | null,
 	context: MarkdownCodeBlockTimelineProcessingContext,
-	tagsToFind: string[]
+	condition: string
 ): Promise<CompleteCardContext[]> {
 	if (!body) return [];
 	const parser = new DOMParser();
@@ -168,7 +168,7 @@ export async function getDataFromFantasyCalendarSpanEvents(
 			context.cachedMetadata.tags
 		);
 
-		if (!extractedTagsAreValid(noteTags, tagsToFind)) continue;
+		if (!extractedTagsAreValid(noteTags, condition)) continue;
 		const matchPositionInBody = htmlDoc.body.innerHTML.indexOf(
 			element.outerHTML
 		);
