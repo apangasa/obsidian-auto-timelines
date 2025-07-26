@@ -101,7 +101,21 @@ export function getImageUrlFromContextOrDocument(
 	} = app;
 	const override = metadata?.[metadataKeyEventPictureOverride];
 
-	if (override) return override;
+	if (override) {
+		// Check for internal link format
+		const internalOverrideMatch = override.match(/^\s*!?\[\[(?<src>[^|\]]*).*\]\]\s*$/);
+		if (internalOverrideMatch && internalOverrideMatch.groups?.src) {
+			const file = getFirstLinkpathDest.bind(app.metadataCache)(
+				internalOverrideMatch.groups.src,
+				currentFile.path
+			) satisfies TFile | null;
+			if (file instanceof TFile) return vault.getResourcePath(file);
+		}
+
+		// Else treat as external URL or raw path
+		return encodeURI(override.trim());
+	}
+
 	const internalLinkMatch = rawFileText.match(/!\[\[(?<src>[^|\]]*).*\]\]/); // Allow for size and CSS modifiers on the image
 	const externalPictureMatch = rawFileText.match(/!\[.*\]\((?<src>.*)\)/);
 	let internalLinkIsBeforeExternal = true;
