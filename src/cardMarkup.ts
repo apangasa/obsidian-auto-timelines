@@ -103,7 +103,7 @@ export function formatBodyForCard(
 	settings: AutoTimelineSettings,
 	body?: string | null,
 ): string {
-	if (!body) return "No body for this note :(";
+	if (!body) return "No body, no nose :(";
 
 	const endOfEventMarkerIndex = body.indexOf(
 		settings.inlineEventEndOfBodyMarker,
